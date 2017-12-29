@@ -3,9 +3,11 @@
 
 import os
 import sqlite3
-import logging
+import datetime
 
-schema_filepath = './dbschema.sql'
+schema_filepath = 'dbschema.sql'
+absolute_scheme_filepath = os.path.join(
+    os.path.dirname(__file__), schema_filepath)
 
 
 class DBWrapper():
@@ -23,7 +25,7 @@ class DBWrapper():
 
     def create_database(self, database_file_path):
         ''' Creates the database file and sets the schema.'''
-        self.db_connection = sqlite3.connect(database_file_path)
+        self.db_connection = sqlite3.connect(absolute_scheme_filepath)
         with open(schema_filepath) as file_handle:
             schema = file_handle.read()
             self.db_connection.executescript(schema)
@@ -60,7 +62,8 @@ class DBWrapper():
         INSERT into user_data (nickname, latitude, longitude, zone_id, min_distance_km, max_distance_km, unsubscribed, banned, favourite_things, blacklist_things, suggestion_freq, communities, last_suggestion, already_suggested)
         values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
-        self.db_connection.execute(command, (username, latitude longitude, zone_id, min_distance_km, max_distance_km, False, banned, favourite_things, blacklist_things, suggestion_freq, communities, datetime.datetime.utcnow().strftime('%Y-%m-%d'), ''))
+        self.db_connection.execute(command, (username, latitude, longitude, zone_id, min_distance_km, max_distance_km, False, banned,
+                                             favourite_things, blacklist_things, suggestion_freq, communities, datetime.datetime.utcnow().strftime('%Y-%m-%d'), ''))
 
     def unsubscribe_user(self, username):
         ''' Marks a user as unsubscribed'''
