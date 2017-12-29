@@ -45,5 +45,5 @@ class InformationManager(object):
         return self.logger
 
     def get_secrets(self):
-        ''' Returns the secrets
+        ''' Returns the secrets'''
         return self.secrets
