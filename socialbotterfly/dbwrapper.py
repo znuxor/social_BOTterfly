@@ -4,7 +4,7 @@
 import os
 import sqlite3
 import datetime
-
+from .informationmanager import InformationManager
 schema_filepath = 'dbschema.sql'
 absolute_scheme_filepath = os.path.join(
     os.path.dirname(__file__), schema_filepath)
@@ -13,11 +13,11 @@ absolute_scheme_filepath = os.path.join(
 class DBWrapper():
     ''' Wrapper class around a database to interface the necessary operations.'''
 
-    def __init__(self, database_file_path, zone_id_func):
-        self.database_file_path = database_file_path
+    def __init__(self, zone_id_func):
+        self.database_file_path = InformationManager().get_database_file_location()
         self.zone_id_func = zone_id_func
 
-        if not os.path.exists(database_file_path):
+        if not os.path.exists(self.database_file_path):
             print('Database does not exist, creating...')
             self.create_database(database_file_path)
 

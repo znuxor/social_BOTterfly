@@ -2,12 +2,17 @@
 # -*- coding: utf-8 -*-
 
 import praw
+from .informationmanager import InformationManager
 
 class RedditWrapper():
     ''' Wrapper class around reddit to interact with the bot account.'''
 
-    def __init__(self, client_id, client_secret, bot_password):
+    def __init__(self):
+        secrets = InformationManager().get_secrets()
+        client_id = secrets['client_id']
+        client_secret = secrets['client_secret']
         bot_username = 'social_BOTterfly'
+        bot_password = secrets['bot_password']
         self.reddit = praw.Reddit(client_id=client_id,
                                   client_secret=client_secret,
                                   username=bot_username,

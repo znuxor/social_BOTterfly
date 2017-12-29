@@ -3,6 +3,7 @@
 
 import os
 import logging
+import pickle
 
 project_name = 'socialbotterfly'
 project_data_path = os.path.join(os.path.expanduser('~'), '.'+project_name)
@@ -33,8 +34,11 @@ class InformationManager(object):
 
         # secrets loading
         secrets_file_path = os.path.join(project_data_path, 'secrets.p')
-        with open(secrets_file_path, 'rb') as f:
-            self.secrets = pickle.load(f)
+        if not os.path.exists(secrets_file_path):
+            self.secrets = None
+        else:
+            with open(secrets_file_path, 'rb') as f:
+                self.secrets = pickle.load(f)
 
     def get_database_file_location(self):
         ''' Returns the path of the database file'''
