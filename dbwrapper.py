@@ -7,8 +7,10 @@ import logging
 
 schema_filepath = './dbschema.sql'
 
+
 class DBWrapper():
     ''' Wrapper class around a database to interface the necessary operations.'''
+
     def __init__(self, database_file_path, zone_id_func):
         self.database_file_path = database_file_path
         self.zone_id_func = zone_id_func
@@ -86,7 +88,8 @@ class DBWrapper():
         SET latitude=?, longitude=?, zone_id=?
         WHERE nickname=?
         """
-        self.db_connection.execute(command, (latitude, longitude, zone_id, username))
+        self.db_connection.execute(
+            command, (latitude, longitude, zone_id, username))
 
     def set_max_distance(self, username, max_distance_km):
         ''' Changes a user's max distance'''
