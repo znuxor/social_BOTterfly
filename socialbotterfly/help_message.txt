@@ -19,7 +19,7 @@ things I hate:
 
 To get your position, please go to https://www.google.ca/maps/ and right-click -> More information for this location -> Copy and paste the coordinates. You can use other means to get your latitude and longitude if you want.
 
-The maximum distance (in kilometers or miles) is the maximum distance allowed between you and the other person.
+The maximum distance (in kilometers or miles, add the units!) is the maximum distance allowed between you and the other person.
 
 The things you like are a comma-separated list of things you like. You will get preferentially matched with someone who likes the same things are you.
 
