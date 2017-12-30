@@ -44,6 +44,6 @@ class RedditWrapper():
         message_obj = self.reddit.inbox.message(message_id)
         message_obj.mark_read()
 
-    def send_message(user_name, subject, body):
+    def send_message(self, user_name, subject, body):
         ''' Sends a message to a redditor'''
         self.reddit.redditor(user_name).message(subject, body)

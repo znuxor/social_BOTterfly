@@ -23,7 +23,7 @@ class MessageProcessor():
             self.process_one_message()
 
     def process_one_message(self):
-        author, body, message_id = self.redditwrapper.serve_oldest_message()
+        author, subject, body, message_id = self.redditwrapper.serve_oldest_message()
         subject_filtered = subject.lower().rstrip(' ').lstrip(' ')
         if subject_filtered == 'subscribe':
             valid, failure_information = self.process_subscribe_message(
@@ -39,7 +39,7 @@ class MessageProcessor():
             failure_information = None
 
         if valid == False:
-            self.send_help_message(author)
+            self.send_help_message(author, failure_information)
 
         # mark the message as valid
         self.redditwrapper.mark_as_read(message_id)
@@ -70,7 +70,7 @@ class MessageProcessor():
                 if len(position_string_list) in (2, 3):
                     try:
                         longitude = float(position_string_list[0])
-                        latitude = float(position_string_list[1])A
+                        latitude = float(position_string_list[1])
                         if longitude < -180 or longitude > 180:
                             longitude = None
                             error_message += '\nInvalid longitude, must be between -180 and 180'
