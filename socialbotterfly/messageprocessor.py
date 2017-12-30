@@ -39,12 +39,30 @@ class MessageProcessor():
         self.redditwrapper.send_message(author, 'social_BOTterfly Help message', help_message.format(author, failure_information))
 
     def process_subscribe_message(self, author, body):
+        error_message = 'Some information was missing:'
         all_needed_info_available = False
+        latitude = None
+        longitude = None
+        zone_id = None
+        max_distance_km = None
+        favourite_things = ''
+        blacklist_things = ''
+        suggestion_freq = ''
+        communities = 'socialskills'
+
+        # Parse the message body for the necessary information
+        lines = body.split('\n')
+        #TODO
+
+        if latitude is not None and longitude is not None and zone_id is not None and max_distance_km is not None:
+            all_needed_info_available = True
 
         if all_needed_info_available:
             self.dbwrapper.add_user(author, latitude, longitude, zone_id, max_distance_km,favourite_things=favourite_things, blacklist_things=blacklist_things, suggestion_freq=suggestion_freq, communities=communities)
             self.redditwrapper.send_message(author, 'subscription successful', 'Your subscription was successful, be prepared to receive suggestion soon!')
-        return True, None
+            return True, None
+        else:
+            return False, error_message
 
     def process_unsubscribe_message(self, author):
         self.dbwrapper.unsubscribe_user(author)
