@@ -13,20 +13,18 @@ absolute_scheme_filepath = os.path.join(
 class DBWrapper():
     ''' Wrapper class around a database to interface the necessary operations.'''
 
-    def __init__(self, zone_id_func):
-        self.database_file_path = InformationManager().get_database_file_location()
-        self.zone_id_func = zone_id_func
+    def __init__(self):
 
-        if not os.path.exists(self.database_file_path):
+        if not os.path.exists(InformationManager().get_database_file_location()):
             print('Database does not exist, creating...')
-            self.create_database(database_file_path)
+            self.create_database(InformationManager().get_database_file_location())
 
-        self.db_connection = sqlite3.connect(database_file_path)
+        self.db_connection = sqlite3.connect(InformationManager().get_database_file_location())
 
     def create_database(self, database_file_path):
         ''' Creates the database file and sets the schema.'''
-        self.db_connection = sqlite3.connect(absolute_scheme_filepath)
-        with open(schema_filepath) as file_handle:
+        self.db_connection = sqlite3.connect(database_file_path)
+        with open(absolute_scheme_filepath) as file_handle:
             schema = file_handle.read()
             self.db_connection.executescript(schema)
         self.db_connection.close()
@@ -55,14 +53,13 @@ class DBWrapper():
         print(user_data)
         return user_data
 
-    def add_user(self, username, latitude, longitude, min_distance_km, max_distance_km, banned=False, favourite_things='', blacklist_things='', suggestion_freq='weekly', communities='socialskills'):
+    def add_user(self, username, latitude, longitude, zone_id, max_distance_km, banned=False, favourite_things='', blacklist_things='', suggestion_freq='weekly', communities='socialskills'):
         ''' Adds a user to the database.'''
-        zone_id = self.zone_id_func(latitude, longitude)
         command = """
-        INSERT into user_data (nickname, latitude, longitude, zone_id, min_distance_km, max_distance_km, unsubscribed, banned, favourite_things, blacklist_things, suggestion_freq, communities, last_suggestion, already_suggested)
+        INSERT into user_data (nickname, latitude, longitude, zone_id, max_distance_km, unsubscribed, banned, favourite_things, blacklist_things, suggestion_freq, communities, last_suggestion, already_suggested)
         values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
-        self.db_connection.execute(command, (username, latitude, longitude, zone_id, min_distance_km, max_distance_km, False, banned,
+        self.db_connection.execute(command, (username, latitude, longitude, zone_id, max_distance_km, False, banned,
                                              favourite_things, blacklist_things, suggestion_freq, communities, datetime.datetime.utcnow().strftime('%Y-%m-%d'), ''))
 
     def unsubscribe_user(self, username):
@@ -83,9 +80,8 @@ class DBWrapper():
         """
         self.db_connection.execute(command, (username,))
 
-    def set_position(self, username, latitude, longitude):
+    def set_position(self, username, latitude, longitude, zone_id):
         ''' Changes a user's position'''
-        zone_id = self.zone_id_func(latitude, longitude)
         command = """
         UPDATE user_data
         SET latitude=?, longitude=?, zone_id=?
@@ -102,15 +98,6 @@ class DBWrapper():
         WHERE nickname=?
         """
         self.db_connection.execute(command, (max_distance_km, username))
-
-    def set_min_distance(self, username, min_distance_km):
-        ''' Changes a user's max distance'''
-        command = """
-        UPDATE user_data
-        SET min_distance_km=?
-        WHERE nickname=?
-        """
-        self.db_connection.execute(command, (min_distance_km, username))
 
     def set_favourite_things(self, username, favourite_things):
         ''' Changes a user's favourite things'''

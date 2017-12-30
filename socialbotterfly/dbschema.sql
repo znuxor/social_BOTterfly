@@ -4,7 +4,6 @@ create table user_data (
     latitude          float,
     longitude         float,
     zone_id           integer,
-    min_distance_km   float,
     max_distance_km   float,
     unsubscribed      bool default false,
     banned            bool default false,

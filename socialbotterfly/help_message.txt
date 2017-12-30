@@ -1,0 +1,39 @@
+Hey {}!
+
+You have received this message because you either asked for help, or your previous message was invalid.
+{}
+
+
+Here is the help for social_BOTterfly:
+
+* I want periodic suggestions about other redditors so can make contact each other!
+
+Send the bot a message with the subject being 'subscribe' withotu the quotes. Enter the following message (between the quotes) and add the required information:
+
+'
+position:
+maximum distance:
+things I like:
+things I hate:
+'
+
+To get your position, please go to https://www.google.ca/maps/ and right-click -> More information for this location -> Copy and paste the coordinates. You can use other means to get your latitude and longitude if you want.
+
+The maximum distance (in kilometers or miles) is the maximum distance allowed between you and the other person.
+
+The things you like are a comma-separated list of things you like. You will get preferentially matched with someone who likes the same things are you.
+
+The things you hate are a comma-separated list of things you hate. You will not get matched with someone who likes one of these things.
+
+* I don't want suggestions anymore!
+
+Send the bot a message with the subject being 'unsubscribe' without the quotes. Make the message body non-empty.
+
+* I want to leave a comment about possible enhancements for the bot!
+
+* I want the help message!
+
+Send the bot literally anything that's not one of the commands.
+
+The source code is available at:
+https://github.com/znuxor/social_BOTterfly
