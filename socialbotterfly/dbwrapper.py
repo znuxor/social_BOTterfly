@@ -53,14 +53,14 @@ class DBWrapper():
         print(user_data)
         return user_data
 
-    def add_user(self, username, latitude, longitude, zone_id, max_distance_km, banned=False, favourite_things='', blacklist_things='', suggestion_freq='weekly', communities='socialskills'):
+    def add_user(self, username, latitude, longitude, zone_id, max_distance_km, banned=False, favourite_things='', blacklist_things=''):
         ''' Adds a user to the database.'''
         command = """
-        INSERT into user_data (nickname, latitude, longitude, zone_id, max_distance_km, unsubscribed, banned, favourite_things, blacklist_things, suggestion_freq, communities, last_suggestion, already_suggested)
+        INSERT into user_data (nickname, latitude, longitude, zone_id, max_distance_km, unsubscribed, banned, favourite_things, blacklist_things, last_suggestion, already_suggested)
         values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """
         self.db_connection.execute(command, (username, latitude, longitude, zone_id, max_distance_km, False, banned,
-                                             favourite_things, blacklist_things, suggestion_freq, communities, datetime.datetime.utcnow().strftime('%Y-%m-%d'), ''))
+                                             favourite_things, blacklist_things, suggestion_freq, datetime.datetime.utcnow().strftime('%Y-%m-%d'), ''))
 
     def unsubscribe_user(self, username):
         ''' Marks a user as unsubscribed'''
@@ -116,24 +116,6 @@ class DBWrapper():
         WHERE nickname=?
         """
         self.db_connection.execute(command, (blacklist_things, username))
-
-    def set_suggestion_freq(self, username, suggestion_freq):
-        ''' Changes a user's suggestion frequency'''
-        command = """
-        UPDATE user_data
-        SET suggestion_freq=?
-        WHERE nickname=?
-        """
-        self.db_connection.execute(command, (suggestion_freq, username))
-
-    def set_communities(self, username, communities):
-        ''' Changes a user's community list'''
-        command = """
-        UPDATE user_data
-        SET communities=?
-        WHERE nickname=?
-        """
-        self.db_connection.execute(command, (communities, username))
 
     def update_with_suggestion(self, username, suggestion):
         command = """
