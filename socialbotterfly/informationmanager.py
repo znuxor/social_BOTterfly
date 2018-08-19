@@ -40,10 +40,6 @@ class InformationManager(object):
             with open(secrets_file_path, 'rb') as f:
                 self.secrets = pickle.load(f)
 
-    def get_database_file_location(self):
-        ''' Returns the path of the database file'''
-        return self.db_file_loc
-
     def get_project_logger(self):
         ''' Returns the logger object'''
         return self.logger
