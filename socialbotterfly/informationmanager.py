@@ -24,12 +24,9 @@ class InformationManager(object):
         if not os.path.exists(project_data_path):
             os.mkdir(project_data_path)
 
-        # db file location
-        self.db_file_loc = os.path.join(project_data_path, 'user_data.db')
-
         # logger initialization
         log_file_path = os.path.join(project_data_path, 'log.txt')
-        logging.basicConfig(filename=log_file_path,level=logging.DEBUG)
+        logging.basicConfig(filename=log_file_path, level=logging.DEBUG)
         self.logger = logging.getLogger()
 
         # secrets loading

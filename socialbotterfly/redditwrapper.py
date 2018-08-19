@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+import datetime
 import praw
 from .informationmanager import InformationManager
+
 
 class RedditWrapper():
     ''' Wrapper class around reddit to interact with the bot account.'''
@@ -19,31 +21,49 @@ class RedditWrapper():
                                   password=bot_password,
                                   user_agent='social_BOTterfly by /u/znuxor')
         test_username = self.reddit.user.me()
-        assert test_username == bot_username, 'Could not authenticate to the bot account!'
+        assert test_username == bot_username, 'Could not authenticate account!'
 
-    def has_unread_messages(self):
-        '''Returns True if there is messages to process'''
-        return len(list(self.reddit.inbox.unread(limit=1))) == 1
+    def manage_post(self):
+        '''Creates the weekly post and stickies it if the time has come.'''
+        last_post_date = InformationManager().get_last_post_date()
+        current_date = datetime.datetime.now().date()
+        current_day = current_date.strftime('%A')
+        if (current_date - last_post_date) >= datetime.timedelta(7) and current_date == 'Sunday':
+            # create post information
+            installment_number = InformationManager().get_installment_number()
+            challenge_1 = InformationManager().get_challenge_first()
+            challenge_2 = InformationManager().get_challenge_second()
+            week_first_day = (current_date + datetime.timedelta(1)).strftime("%D")
+            title = 'Socialskills challenge for the week {}'.format(week_first_day)
+            content = InformationManager().get_template_post().format(installment_number,
+                                                                      challenge_1.content,
+                                                                      challenge_1.author,
+                                                                      challenge_2.content,
+                                                                      challenge_2.author)
 
-    def serve_oldest_message(self):
-        '''Returns the following information about the oldest inbox message:
-           author_username as string
-           message_subject as string
-           message_body as string
-           message_id as string, used to mark a message as read after processing
-        '''
-        unread_message = [i for i in self.reddit.inbox.unread(limit=None)][-1]
-        author_username = unread_message.author.name
-        message_subject = unread_message.subject
-        message_body = unread_message.body
-        message_id = unread_message.id
-        return author_username, message_subject, message_body, message_id
+            # submit post
+            post = self.reddit.subreddit(InformationManager.get_subreddit_name()).submit(title, content, send_replies=False)
 
-    def mark_as_read(self, message_id):
-        ''' Mark a message as read, takes the reddit PRAW message id as argument'''
-        message_obj = self.reddit.inbox.message(message_id)
-        message_obj.mark_read()
+            # distinction replacement
+            InformationManager().get_last_post().distinguish(how='no')
+            post.distinguish()
 
-    def send_message(self, user_name, subject, body):
-        ''' Sends a message to a redditor'''
-        self.reddit.redditor(user_name).message(subject, body)
+            # save and update info
+            InformationManager().replace_post(post)
+            InformationManager().consume_challenge()
+            InformationManager().consume_challenge()
+
+    def manage_comments():
+        '''Manages the comments of the last post to award points'''
+        last_post_item = InformationManager.get_last_post()
+
+        for a_top_comment in last_post_item.comments():
+            content = a_top_comment.body
+            author = a_top_comment.author
+            for a_line in content.split('\n'):
+                cleaned_line = a_line.strip()
+                if '1:' in cleaned_line and cleaned_line.split() >= 5:
+                    pass
+                if '2:' in a_line and a_line.split() >= 5:
+                    pass
+

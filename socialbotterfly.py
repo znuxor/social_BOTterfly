@@ -2,9 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import socialbotterfly
+import time
 
-# start by processing messages
+LONG_PAUSE = 10*60
 
 redditwrapper = socialbotterfly.RedditWrapper()
-messageprocessor = socialbotterfly.MessageProcessor(redditwrapper, dbwrapper)
-messageprocessor.process_all_messages()
+redditwrapper.manage_post()
+redditwrapper.manage_comments()
