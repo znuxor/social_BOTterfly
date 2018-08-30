@@ -28,7 +28,7 @@ class RedditWrapper():
         last_post_date = InformationManager().get_last_post_date()
         current_date = datetime.datetime.now().date()
         current_day = current_date.strftime('%A')
-        if (current_date - last_post_date) >= datetime.timedelta(7) and current_date == 'Sunday':
+        if (current_date - last_post_date) >= datetime.timedelta(7) and current_day == 'Sunday':
             # create post information
             installment_number = InformationManager().get_installment_number()
             challenge_1 = InformationManager().get_challenge_first()
@@ -43,27 +43,37 @@ class RedditWrapper():
 
             # submit post
             post = self.reddit.subreddit(InformationManager.get_subreddit_name()).submit(title, content, send_replies=False)
+            post_id = post.id
 
             # distinction replacement
             InformationManager().get_last_post().distinguish(how='no')
             post.distinguish()
 
             # save and update info
-            InformationManager().replace_post(post)
+            InformationManager().replace_post_id(post_id)
             InformationManager().consume_challenge()
             InformationManager().consume_challenge()
 
-    def manage_comments():
+    def manage_comments(self):
         '''Manages the comments of the last post to award points'''
-        last_post_item = InformationManager.get_last_post()
+        post_id = InformationManager.get_last_post_id()
+        last_post_item = praw.models.Submission(id=post_id)
 
         for a_top_comment in last_post_item.comments():
             content = a_top_comment.body
             author = a_top_comment.author
             for a_line in content.split('\n'):
                 cleaned_line = a_line.strip()
-                if '1:' in cleaned_line and cleaned_line.split() >= 5:
-                    pass
-                if '2:' in a_line and a_line.split() >= 5:
-                    pass
+                if '1:' in cleaned_line and cleaned_line.split() >= 5 and \
+                        not InformationManager().has_point(author, post_id, 1):
+                    InformationManager().award_point(author, post_id, 1,
+                                                     InformationManager().get_challenge_score(1))
+                if '2:' in cleaned_line and cleaned_line.split() >= 5 and \
+                        not InformationManager().has_point(author, post_id, 2):
+                    InformationManager().award_point(author, post_id, 2,
+                                                     InformationManager().get_challenge_score(2))
 
+                    if InformationManager().score_needs_update(author):
+                        subreddit = self.reddit.subreddit(InformationManager.get_subreddit_name())
+                        subreddit.flair.set(author, '{} ☆'.format(InformationManager().get_user_score(author)))
+                        InformationManager().mark_score_updated(author)

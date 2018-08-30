@@ -1,0 +1,25 @@
+Hello everyone and welcome to installment #{} of the weekly /r/socialskills challenge!
+
+This week, the two challenges are:
+
+1: {} (Thank you /u/{}!)
+
+2: {} (Thank you /u/{}!)
+
+# What is this?
+
+Every week, two challenges appear, the second being more difficult than the first. By completing said challenges, you are awarded ⭐ points ⭐ that will be shown in your flair.
+
+## Ok, so I completed one of last week's challenges, now how do I get my points?
+
+To earn points, you will have to comment briefly (5 or more words on a comment) on the challenge(s) you have completed. You have until the next week to report.
+
+To manage points, we will use a bot, it will read comments for lines starting with 1: or 2: and interpret them as insights on challenges to award points.
+
+## I failed a challenge...
+
+It's ok, one of the objectives is to give insights to other users. Feel free to comment on the challenge and you will get points too.
+
+## I have a great challenge idea!
+
+That's good, we need ideas for the weekly challenges. If you have an idea, please post it as a response to the stickied comment in this thread.

@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+'''Contains the definition of the information management interface.'''
 
 import os
 import logging
 import pickle
 
-project_name = 'socialbotterfly'
-project_data_path = os.path.join(os.path.expanduser('~'), '.'+project_name)
+PROJECT_DATA_PATH = os.path.join('.')
 
 
-class InformationManager(object):
+class InformationManager():
+    '''Serves as an abstraction layer with saved data and secrets.'''
 
     # singleton stuff
     __instance = None
@@ -20,22 +21,19 @@ class InformationManager(object):
         return InformationManager.__instance
 
     def __init__(self):
-        # checks if the data directory exists, if not, we create it
-        if not os.path.exists(project_data_path):
-            os.mkdir(project_data_path)
 
         # logger initialization
-        log_file_path = os.path.join(project_data_path, 'log.txt')
+        log_file_path = os.path.join(PROJECT_DATA_PATH, 'log.txt')
         logging.basicConfig(filename=log_file_path, level=logging.DEBUG)
         self.logger = logging.getLogger()
 
         # secrets loading
-        secrets_file_path = os.path.join(project_data_path, 'secrets.p')
+        secrets_file_path = os.path.join(PROJECT_DATA_PATH, 'secrets.p')
         if not os.path.exists(secrets_file_path):
             self.secrets = None
         else:
-            with open(secrets_file_path, 'rb') as f:
-                self.secrets = pickle.load(f)
+            with open(secrets_file_path, 'rb') as file_handle:
+                self.secrets = pickle.load(file_handle)
 
     def get_project_logger(self):
         ''' Returns the logger object'''
