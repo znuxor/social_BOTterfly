@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+'''Main file, drives the bot between its states'''
 
 import socialbotterfly
-import time
-
-LONG_PAUSE = 10*60
 
 redditwrapper = socialbotterfly.RedditWrapper()
 redditwrapper.manage_post()
