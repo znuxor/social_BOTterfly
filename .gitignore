@@ -102,3 +102,4 @@ ENV/
 
 # project files
 secrets.p
+log.txt
